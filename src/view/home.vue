@@ -87,7 +87,6 @@
 <script>
 
 import { ref } from 'vue';
-import { Notify } from 'vant';
 export default {
   setup() {
 
