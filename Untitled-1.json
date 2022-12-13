@@ -1,0 +1,24 @@
+{
+    "success": true,
+    "result": {
+        "total": 10,
+        "rows": [
+            {
+                "pi": "91057266",
+                "pv": "13925630",
+                "patientName": "钱新华",
+                "deptCode": "1",
+                "areaName": "总院",
+                "ruyuandate": "2021-01-01",
+                "deptName": "呼吸内科",
+                "wardCode": "1",
+                "wardName": "一病区",
+                "doctorCode": "31",
+                "doctorName": "李楠"
+            }
+        ]
+    }
+}
+
+管理员界面：
+筛选：抗原阳性；核酸阳性；核酸阴性；抗原阴性；抗原阳+核酸阳  共五个
