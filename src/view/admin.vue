@@ -1,29 +1,29 @@
 <template>
     <div class="van-safe-area-top"></div>
   <div>
-    <van-row>
+    <!-- <div > -->
+    <van-row class="bottom_btns">
         <van-col span="10" offset="4">
-            <van-button type="primary" >筛选</van-button>
+            <van-button type="primary" @click="selectType">筛选</van-button>
         </van-col>
         <van-col span="10" offset="0">
             <van-button type="primary" @click="submit">导出excel</van-button>
         </van-col>
-    
-    
     </van-row>
-
-    <van-row>
+    <van-row style="margin-top: 15%"></van-row>
+    <van-row style="margin-left: 5%">
         <!-- <van-button size="mini" style="margin-top: 10%;">抗原</van-button> -->
-        <van-radio-group v-model="hsAndky">
-            <van-radio name="1" checked-color="#ee0a24">全部显示</van-radio>
-            <van-radio name="2" checked-color="#32CD32">抗原阳+核酸阳</van-radio>
-            <van-radio name="3" checked-color="#32CD32">抗原阳</van-radio>
-            <van-radio name="4" checked-color="#32CD32">抗原阴</van-radio>
-            <van-radio name="5" checked-color="#32CD32">核酸阳</van-radio>
-            <van-radio name="6" checked-color="#32CD32">核酸阴</van-radio>
+        <van-radio-group v-model="hsAndky" direction="horizontal" >
+            <van-radio name="1" checked-color="#32CD32" style="margin-top: 3px">全部显示</van-radio>
+            <van-radio name="2" checked-color="#32CD32" style="margin-top: 3px">抗原阳+核酸阳</van-radio>
+            <van-radio name="3" checked-color="#32CD32" style="margin-top: 3px">抗原阳</van-radio>
+            <van-radio name="4" checked-color="#32CD32" style="margin-top: 6px">抗原阴</van-radio>
+            <van-radio name="5" checked-color="#32CD32" style="margin-top: 6px">核酸阳</van-radio>
+            <van-radio name="6" checked-color="#32CD32" style="margin-top: 6px">核酸阴</van-radio>
+            <van-radio name="7" checked-color="#32CD32" style="margin-top: 6px">阳转阴</van-radio>
         </van-radio-group>
     </van-row>
-
+  <!-- </div> -->
     <div style="margin-left:2%; margin-right:2%">
         <van-list
         v-model:loading="loading"
@@ -59,7 +59,7 @@
                     </van-row>
                 </van-col>
                 <van-col span="7">
-                    <van-row style="margin-top: 0%;">
+                    <van-row style="margin-top: 10%;">
                         <van-button size="mini" >抗原</van-button>
                         <van-col v-if="item.ky == '1'">
                             <van-icon name="passed" color="#32CD32"/>
@@ -74,7 +74,7 @@
                             无效
                         </van-col>
                     </van-row>
-                    <van-row style="margin-top: 5%;">
+                    <van-row style="margin-top: 10%;">
                         <van-button size="mini" >核酸</van-button>
                         <van-col v-if="item.hs == '1'">
                             <van-icon name="passed" color="#32CD32"/>
@@ -111,63 +111,17 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
+import axios from 'axios';
 XLSX.set_fs(fs);
 
 export default {
   setup() {
-    const hsAndky = ref("0");
+    const hsAndky = ref("1");
     const show = ref(false);
     const fieldValue = ref('');
     const cascaderValue = ref('');
     // 选项列表，children 代表子选项，支持多级嵌套
-
-    const patients =  ref([
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "1钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": '1',
-                "hs": '2',
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "2钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "3钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            }
-        ]);
+    const patients =  ref([])
 
     // 全部选项选择完毕后，会触发 finish 事件
     const onFinish = ({ selectedOptions }) => {
@@ -176,20 +130,41 @@ export default {
       console.log(fieldValue.value)
     };
 
+    const selectType = () => {
+      let targetJson =  { ky: 0, hs: 0, yang_2_ying: 0 }
+       switch (hsAndky.value) {
+        case "1":
+          {targetJson.ky = 0; break; }
+        case "2":
+          {targetJson.ky = 1; targetJson.hs = 1; break; }
+        case "3":
+          {targetJson.ky = 1;  break; }
+        case "4":
+          { targetJson.ky = 2; break; }
+        case "5":
+          {targetJson.hs = 1; break; }
+        case "6":
+          {targetJson.hs = 2; break; }
+        case "7":
+          {targetJson.yang_2_ying = 1;break; }
+       }
+       axios.post("/api/admin/printCurOfficePatient", targetJson).then(function (response){
+          if(response.status == 200) {
+            patients.value = response.data;
+            
+          }
+      });
+    }
+
     const submit = () => {
-        let excelData = [
-					["序号","姓名","年龄","性别","手机","邮箱","金额","创建日期"],
-					[1,"周一",28,"男","13888888881","1@q.com",4123.3,"2020-05-01"],
-					[2,"崔二",25,"女","13888888882","2@q.com",23432,"2020-05-03"],
-					[3,"张三",15,"男","13888888883","3@q.com",433.14,"2020-05-02"],
-					[4,"李四",27,"男","13888888884","4@q.com",6523,"2020-05-01"],
-					[5,"王五",18,"男","13888888885","5@q.com",411.36,"2020-05-04"],
-					[6,"赵六",21,"男","13888888886","6@q.com",1234,"2020-05-08"],
-					[7,"唐七",22,"女","13888888887","7@q.com",4321.75,"2020-05-05"],
-					[8,"范八",19,"男","13888888888","8@q.com",4322,"2020-05-06"],
-					[9,"薛九",31,"女","13888888889","9@q.com",56465,"2020-05-01"],
-					[10,"闫十",45,"男","13888888810","10@q.com",7864,"2020-05-07"]
-				]
+      
+      let excelData = [['姓名', '科室', '区域', '入院日期', '病区', '医生姓名', '抗原', '核酸', '阳转阴']]
+      patients.value.forEach(ele => {
+        let ky = Number(ele.ky) == 1? "是": "否";
+        let hs = Number(ele.ky) == 1? "是": "否";
+        let yang_2_ying = Number(ele.yang_2_ying) == 1? "是": "否";
+        excelData.push([ele.patientName, ele.deptName, ele.areaName, ele.ruyuandate, ele.wardName, ele.doctorName, ky, hs, yang_2_ying,])
+      });
                 // ref: https://docs.sheetjs.com/docs/getting-started/example
         const worksheet = XLSX.utils.json_to_sheet(excelData);
         const workbook = XLSX.utils.book_new();
@@ -197,7 +172,12 @@ export default {
           /* calculate column width */
         // const max_width = excelData.reduce((w, r) => Math.max(w, r.name.length), 10);
         // worksheet["!cols"] = [ { wch: max_width } ];
-        XLSX.writeFile(workbook, "Presidents.xlsx", { compression: true });
+      let preFixNameList = ['全部显示', '抗原阳+核酸阳', '抗原阳', '抗原阴', '核酸阳', '核酸阴', '阳转阴']
+        let preFixName = preFixNameList[Number(hsAndky.value)-1]
+        let time = new Date()
+        let timeNow = time.getFullYear() + "-" + time.getMonth() + "-" + time.getDay();
+        console.log(timeNow, preFixName); // 23-7-2022
+        XLSX.writeFile(workbook, preFixName + timeNow + ".xlsx", { compression: true });
         console.log(patients.value)
         console.log("submit")
     }
@@ -236,13 +216,47 @@ export default {
       cascaderValue,
       submit,
       patients,
-
+      selectType,
     };
   },
 };
 
 </script>
 <style lang="less">
+.bottom_btns {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+   margin-top: 0.3rem;
+  // position: absolute;
+  // bottom: 0;
+  align-items: flex-end;
+  position: flex;
+  top: 0;
+  z-index: 999;
+
+  .export {
+      height: 50%;
+      width: 100%;
+      background-color: red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 0.3rem;
+  }
+
+  .print {
+      height: 50%;
+      width: 100%;
+      background-color: #5172F3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 0.3rem;
+  }
+}
 .goods {
   padding-bottom: 50px;
 
