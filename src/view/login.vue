@@ -34,7 +34,6 @@
 import { ref } from 'vue';
 import router from '../router'
 export default {
-
   setup() {
     const username = ref('');
     const password = ref('');

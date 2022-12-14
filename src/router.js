@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
 
 const routes = [
@@ -34,6 +34,7 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    // params: { userCode: 'gets removed' },
     component: () =>
       import('./view/home.vue')
   }
@@ -41,19 +42,19 @@ const routes = [
 
 const router = createRouter({
   routes,
-  history: createWebHashHistory(),
+  history: createWebHistory(),
 });
 
-router.beforeEach((to, from, next) => {
-  // const title = to.meta && to.meta.title;
-  // if (title) {
-  //   document.title = title;
-  // }
-  if (to.path === '/login') return next()
-  // 获取token
-  const tokenStr = window.sessionStorage.getItem('token')
-  if (!tokenStr) return next('/login')
-  next()
-});
+// router.beforeEach((to, from, next) => {
+//   // const title = to.meta && to.meta.title;
+//   // if (title) {
+//   //   document.title = title;
+//   // }
+//   if (to.path === '/login') return next()
+//   // 获取token
+//   const tokenStr = window.sessionStorage.getItem('token')
+//   if (!tokenStr) return next('/login')
+//   next()
+// });
 
 export  default router ;

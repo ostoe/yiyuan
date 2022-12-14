@@ -2,6 +2,7 @@ const { VantResolver } = require("unplugin-vue-components/resolvers");
 const ComponentsPlugin = require("unplugin-vue-components/webpack");
 
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   devServer: { 
     // host: '172.20.10.3', // TODO 改为部署虚拟机的地址
     port: 8080,
