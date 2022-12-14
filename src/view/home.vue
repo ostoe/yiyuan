@@ -235,7 +235,7 @@ export default {
       // fieldValue.value = selectedOptions.map((option) => option.text).join('/');
       // console.log(fieldValue.value)
       axios.post('/api/doctor/getCurOfficePatient', 
-      { deptNum: Number(cascaderValue.value) , queryType: "", PatientName: ""} 
+      { deptNum: Number(cascaderValue.value) , queryType: "zy", PatientName: ""} 
       ).then(function (response){
         if(response.status == 200) {
           patients.value = response.data;
@@ -252,7 +252,7 @@ export default {
       if (searchPatians.value.trim() == '') {
         console.log("重新搜索")
         axios.post('/api/doctor/getCurOfficePatient', 
-      { deptNum: Number(cascaderValue.value) , queryType: "", PatientName: ""} 
+      { deptNum: Number(cascaderValue.value) , queryType: "zy", PatientName: ""} 
       ).then(function (response){
         if(response.status == 200) {
           patients.value = response.data;
@@ -260,7 +260,7 @@ export default {
       }) // 重新检索
       } else {
         axios.post('/api/doctor/getCurOfficePatient', 
-        { deptNum: 0, queryType: "", PatientName: searchPatians.value.trim()} 
+        { deptNum: 0, queryType: "zy", PatientName: searchPatians.value.trim()} 
         ).then(function (response){
           if(response.status == 200) {
             patients.value = response.data;
@@ -304,14 +304,25 @@ export default {
                 showNotify({ type: 'danger', message: '信息未完全填写' ,background: '#ffe1e1',  position: 'top'})
                 return
             } else {
+              let tmppatients1 = {
+                    patient_name: "cgh333eh",
+                    patient_sex: "男",
+                    marked_by: "z医生",
+                    ky_status: 30,
+                    hs_status: 30,
+                    yang_2_ying: 30,
+                    id_card: "1111"
+                };
               let tmppatients = patients.value[i];
-              tmppatients.ky = Number(tmppatients.ky);
-              tmppatients.hs = Number(tmppatients.hs);
-              tmppatients.yang_2_ying = Number(tmppatients.yang_2_ying);
-              postPatientsJson.push(tmppatients)
+              tmppatients1.patient_name = patients.value[i].patientName;
+              tmppatients1.ky_status = Number(tmppatients.ky);
+              tmppatients1.hs_status = Number(tmppatients.hs);
+              tmppatients1.yang_2_ying = Number(tmppatients.yang_2_ying);
+              tmppatients1.id_card = patients.value[i].id_card;
+              postPatientsJson.push(tmppatients);
             }
         }
-        axios.post('/api/doctor/updatePatientNucleicStatus', postPatientsJson)
+        axios.post('/api/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
         .then(response => (
           showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})
         ))
