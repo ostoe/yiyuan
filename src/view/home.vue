@@ -1,10 +1,10 @@
 <template>
     <div class="van-safe-area-top"></div>
-  <div>
+  <div >
     <!-- <van-goods-bar> -->
     <van-row class="bottom_btns">
         <van-col span="5" offset="2">
-            <van-button @click="callsearchDepat">选择科室</van-button>
+            <van-button round hairline plain type="primary" size="normal" @click="callsearchDepat">选择<br/>科室</van-button>
             <van-popup v-model:show="show" round position="bottom">
             <van-cascader style="margin-bottom:22%;"
                 v-model="cascaderValue"
@@ -17,15 +17,17 @@
 
         </van-col>
         <van-col span="7">
-          <van-search clear-icon v-model="searchDepat" placeholder="搜索科室" />
+          <van-search style="border-radius: 10% / 50%;padding: 0%;" clear-icon shape="round" v-model="searchDepat" placeholder="搜索科室" />
 
         </van-col>
         <van-col span="5" offset="3">
-            <van-button type="primary" @click="submit">提交</van-button>
+            <van-button round type="primary" @click="submit">提交</van-button>
         </van-col>
     </van-row>
     <van-row style="margin-top: 15%">
       <van-search
+      style="border-radius: 10% / 50%;padding: 0%;"
+      shape="round"
         v-model="searchPatians"
         show-action
         label=""
@@ -116,8 +118,11 @@ import { ref , onMounted} from 'vue';
 import axios from 'axios'
 import {showNotify }from 'vant'
 export default {
-
   setup() {
+    
+    // const userCode = this.$route.params.userCode
+      const userCode = 111;
+    console.log(userCode)
     // axios.defaults.baseURL = window.g.baseURL
     const show = ref(false);
     const fieldValue = ref('');
@@ -125,7 +130,7 @@ export default {
     const cascaderValue = ref('');
     // 选项列表，children 代表子选项，支持多级嵌套
     const searchDepat = ref('');
-    const patients =  ref([
+    const patients1 =  ref([
             {
                 "pi": "91057266",
                 "pv": "13925630",
@@ -218,13 +223,14 @@ export default {
                 "hs": 999,
             }
         ]);
+    const patients = ref([]);
     var allDeptOptions = [];
     const deptOptions = ref([]);
     // 全部选项选择完毕后，会触发 finish 事件
     const onFinish = ({ selectedOptions }) => {
       show.value = false
       console.log("cascaderValue", cascaderValue.value)
-      let cascaderMap = {}
+      // let cascaderMap = {}
       // for(let i=0; i<allDeptOptions.length, i++) {
       //   if (allDeptOptions[i].value == cascaderValue.value){
       //     cascaderMap = allDeptOptions[i];
@@ -235,13 +241,30 @@ export default {
       // fieldValue.value = selectedOptions.map((option) => option.text).join('/');
       // console.log(fieldValue.value)
       axios.post('/api/doctor/getCurOfficePatient', 
-      { deptNum: Number(cascaderValue.value) , queryType: "zy", PatientName: ""} 
-      ).then(function (response){
-        if(response.status == 200) {
-          patients.value = response.data;
-        }
-      })
+      { deptCode: cascaderValue.value , queryType: "zy", PatientName: ""} 
+      ).then(handleResponse)
     };
+    const handleResponse = (response) => {
+      if(response.status == 200) {
+        // if (response.success) {
+          let tmpJson = []
+          response.data.result.rows.forEach(ele=> {
+            ele.hs = ele.hs == 0? '2': ele.hs + ""
+            ele.ky = ele.ky == 0? '2': ele.ky + ""
+            if (ele.yang_2_ying) {
+              ele.yang_2_ying = ele.yang_2_ying != 1? ele.yang_2_ying + "": '2'
+            } else {
+              ele.yang_2_ying = '2'
+            }
+            tmpJson.push(ele)
+          })
+          patients.value = tmpJson
+        // } else {
+        //   showNotify({ type: 'warning', message: '未查询到数据',background: '#32CD32',  position: 'top',})
+        // }
+          
+      }
+    }
     const callsearchDepat = () => {
       deptOptions.value = allDeptOptions.filter( function (e) {
         return e.text.search(searchDepat.value.trim()) != -1
@@ -250,22 +273,14 @@ export default {
     }
     const onSearchPatians = () => {
       if (searchPatians.value.trim() == '') {
-        console.log("重新搜索")
+        // console.log("重新搜索")
         axios.post('/api/doctor/getCurOfficePatient', 
-      { deptNum: Number(cascaderValue.value) , queryType: "zy", PatientName: ""} 
-      ).then(function (response){
-        if(response.status == 200) {
-          patients.value = response.data;
-        }
-      }) // 重新检索
+      { deptCode: cascaderValue.value , queryType: "zy", PatientName: ""} 
+      ).then(handleResponse) // 重新检索
       } else {
         axios.post('/api/doctor/getCurOfficePatient', 
-        { deptNum: 0, queryType: "zy", PatientName: searchPatians.value.trim()} 
-        ).then(function (response){
-          if(response.status == 200) {
-            patients.value = response.data;
-          }
-      });
+        { deptCode: cascaderValue.value , queryType: "zy", PatientName: searchPatians.value.trim()} 
+        ).then(handleResponse);
       }
       
     }
@@ -288,7 +303,6 @@ export default {
           console.log(deptOptions.value.length)
           allDeptOptions = deptOptions.value;
         } else {
-
           return
         }
         
@@ -311,21 +325,28 @@ export default {
                     ky_status: 30,
                     hs_status: 30,
                     yang_2_ying: 30,
-                    id_card: "1111"
+                    idcard: "1111",
+                    deptName: "",
                 };
               let tmppatients = patients.value[i];
               tmppatients1.patient_name = patients.value[i].patientName;
               tmppatients1.ky_status = Number(tmppatients.ky);
               tmppatients1.hs_status = Number(tmppatients.hs);
               tmppatients1.yang_2_ying = Number(tmppatients.yang_2_ying);
-              tmppatients1.id_card = patients.value[i].id_card;
-              postPatientsJson.push(tmppatients);
+              tmppatients1.idcard = patients.value[i].idcard;
+              tmppatients1.deptName = patients.value[i].deptName;
+              postPatientsJson.push(tmppatients1);
             }
         }
         axios.post('/api/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
-        .then(response => (
-          showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})
-        ))
+        .then(response => {
+          if (response.status == 200) {
+            showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})
+
+          } else {
+            showNotify({ type: 'warning', message: '提交失败',background: '#dg4332',  position: 'top',})
+          }
+        })
         .catch(function (error) { // 请求失败处理
           console.log(error);
         });
@@ -355,6 +376,7 @@ export default {
     };
 
     onMounted(() => {
+      console.log("mount", userCode)
       getAllData();
     });
 

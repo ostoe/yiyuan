@@ -11,16 +11,17 @@
         </van-col>
     </van-row>
     <van-row style="margin-top: 15%"></van-row>
-    <van-row style="margin-left: 5%">
+    <van-row style="margin-left: 5%;border: 5%;">
         <!-- <van-button size="mini" style="margin-top: 10%;">抗原</van-button> -->
+        
         <van-radio-group v-model="hsAndky" direction="horizontal" >
-            <van-radio name="1" checked-color="#32CD32" style="margin-top: 3px">全部显示</van-radio>
-            <van-radio name="2" checked-color="#32CD32" style="margin-top: 3px">抗原阳+核酸阳</van-radio>
-            <van-radio name="3" checked-color="#32CD32" style="margin-top: 3px">抗原阳</van-radio>
-            <van-radio name="4" checked-color="#32CD32" style="margin-top: 6px">抗原阴</van-radio>
-            <van-radio name="5" checked-color="#32CD32" style="margin-top: 6px">核酸阳</van-radio>
-            <van-radio name="6" checked-color="#32CD32" style="margin-top: 6px">核酸阴</van-radio>
-            <van-radio name="7" checked-color="#32CD32" style="margin-top: 6px">阳转阴</van-radio>
+            <van-radio name="1" checked-color="#32CD32" style="margin-top: 3px">全部显示</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson0}}</van-tag>
+            <van-radio name="2" checked-color="#32CD32" style="margin-top: 3px">抗原阳+核酸阳</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson1}}</van-tag>
+            <van-radio name="3" checked-color="#32CD32" style="margin-top: 3px">抗原阳</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson2}}</van-tag>
+            <van-radio name="4" checked-color="#32CD32" style="margin-top: 6px">抗原阴</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson3}}</van-tag>
+            <van-radio name="5" checked-color="#32CD32" style="margin-top: 6px">核酸阳</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson4}}</van-tag>
+            <van-radio name="6" checked-color="#32CD32" style="margin-top: 6px">核酸阴</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson5}}</van-tag>
+            <van-radio name="7" checked-color="#32CD32" style="margin-top: 6px">阳转阴</van-radio> <van-tag color="#ffe1e1" text-color="#ad0000" style="margin-right:10px; margin-left: -10px;">{{countJson6}}</van-tag>
         </van-radio-group>
     </van-row>
   <!-- </div> -->
@@ -36,7 +37,7 @@
                     
                 <van-col span="6">
                     <van-row style="margin-top: 10%;">
-                        {{item.patientName}}
+                        {{item.patient_name}}
                     </van-row>
                     <van-row style="margin-top: 20%;">
                         {{item.areaName}}
@@ -52,7 +53,7 @@
                 </van-col>
                 <van-col span="5">
                     <van-row style="margin-top: 10%;">
-                        {{item.wardName}}
+                        {{item.ward_name}}
                     </van-row>
                     <van-row style="margin-top: 20%;">
                         {{item.doctorName}}
@@ -61,11 +62,11 @@
                 <van-col span="7">
                     <van-row style="margin-top: 10%;">
                         <van-button size="mini" >抗原</van-button>
-                        <van-col v-if="item.ky == '1'">
+                        <van-col v-if="item.hs_status == '2'">
                             <van-icon name="passed" color="#32CD32"/>
                             阴
                         </van-col>
-                        <van-col v-else-if="item.ky == '2'">
+                        <van-col v-else-if="item.hs_status == '1'">
                             <van-icon name="clock-o" color="#ee0a24" />
                             阳
                         </van-col>
@@ -76,11 +77,11 @@
                     </van-row>
                     <van-row style="margin-top: 10%;">
                         <van-button size="mini" >核酸</van-button>
-                        <van-col v-if="item.hs == '1'">
+                        <van-col v-if="item.ky_status == '2'">
                             <van-icon name="passed" color="#32CD32"/>
                             阴
                         </van-col>
-                        <van-col v-else-if="item.hs == '2'">
+                        <van-col v-else-if="item.ky_status == '1'">
                             <van-icon name="clock-o" color="#ee0a24" />
                             阳
                         </van-col>
@@ -106,12 +107,13 @@
 
 <script>
 
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import * as XLSX from 'xlsx/xlsx.mjs';
 
 /* load 'fs' for readFile and writeFile support */
 import * as fs from 'fs';
 import axios from 'axios';
+import {showNotify }from 'vant'
 XLSX.set_fs(fs);
 
 export default {
@@ -121,8 +123,14 @@ export default {
     const fieldValue = ref('');
     const cascaderValue = ref('');
     // 选项列表，children 代表子选项，支持多级嵌套
-    const patients =  ref([])
-
+    const patients =  ref([]);
+    const countJson0 = ref(0);
+    const countJson1 = ref(0);
+    const countJson2 = ref(0);
+    const countJson3 = ref(0);
+    const countJson4 = ref(0);
+    const countJson5 = ref(0);
+    const countJson6 = ref(0);
     // 全部选项选择完毕后，会触发 finish 事件
     const onFinish = ({ selectedOptions }) => {
       show.value = false;
@@ -131,39 +139,35 @@ export default {
     };
 
     const selectType = () => {
-      let targetJson =  { ky: 0, hs: 0, yang_2_ying: 0 }
+      let targetJson =  { }// ky: 0, hs: 0, yang_2_ying: 0 }
        switch (hsAndky.value) {
         case "1":
-          {targetJson.ky = 0; break; }
+          {targetJson.all = 1; break; }
         case "2":
-          {targetJson.ky = 1; targetJson.hs = 1; break; }
+          {targetJson.ky_status = 1; targetJson.hs_status = 1; break; } //都阳
         case "3":
-          {targetJson.ky = 1;  break; }
+          {targetJson.ky_status = 1;  break; }
         case "4":
-          { targetJson.ky = 2; break; }
+          { targetJson.ky_status = 2; break; }
         case "5":
-          {targetJson.hs = 1; break; }
+          {targetJson.hs_status = 1; break; }
         case "6":
-          {targetJson.hs = 2; break; }
+          {targetJson.hs_status = 2; break; }
         case "7":
           {targetJson.yang_2_ying = 1;break; }
        }
-       axios.post("/api/admin/printCurOfficePatient", targetJson).then(function (response){
-          if(response.status == 200) {
-            patients.value = response.data;
-            
-          }
-      });
+       axios.post("/api/admin/printCurOfficePatient", targetJson).then(handleResponse);
+
     }
 
     const submit = () => {
       
       let excelData = [['姓名', '科室', '区域', '入院日期', '病区', '医生姓名', '抗原', '核酸', '阳转阴']]
       patients.value.forEach(ele => {
-        let ky = Number(ele.ky) == 1? "是": "否";
-        let hs = Number(ele.ky) == 1? "是": "否";
+        let ky = Number(ele.ky_status) == 1? "是": "否";
+        let hs = Number(ele.hs_status) == 1? "是": "否";
         let yang_2_ying = Number(ele.yang_2_ying) == 1? "是": "否";
-        excelData.push([ele.patientName, ele.deptName, ele.areaName, ele.ruyuandate, ele.wardName, ele.doctorName, ky, hs, yang_2_ying,])
+        excelData.push([ele.patient_name, ele.deptName, ele.areaName, ele.ruyuandate, ele.ward_name, ele.doctorName, ky, hs, yang_2_ying,])
       });
                 // ref: https://docs.sheetjs.com/docs/getting-started/example
         const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -182,10 +186,28 @@ export default {
         console.log("submit")
     }
 
-    const userInfo = ref({name: "tfx", auth: "123", time: "222"});
     const list = ref([]);
     const loading = ref(false);
     const finished = ref(false);
+
+    const handleResponse = (response) => {
+      if(response.status == 200) {
+        if (response.total_num != 0) {
+          // let tmpJson = []
+          // response.data.patient_info.forEach(ele=> {
+          //   ele.hs = ele.hs == 0? '2': ele.hs + ""
+          //   ele.ky = ele.ky == 0? '2': ele.ky + ""
+          //   ele.yang_2_ying = ele.yang_2_ying != 1? ele.yang_2_ying + "": '2'
+          //   tmpJson.push(ele)
+          // })
+          // console.log("info", response.data.patient_info)
+          patients.value = response.data.patient_info
+        } else {
+          showNotify({ type: 'warning', message: '未查询到数据',background: '#32CD32',  position: 'top',})
+        }
+          
+      }
+    }
 
     const onLoad = () => {
       // 异步更新数据
@@ -203,12 +225,68 @@ export default {
       }, 1000);
     };
 
+    onMounted(() => {
+      axios.post("/api/admin/printCurOfficePatient", {all : 1 }).then(function (response) {
+        if(response.status == 200) {
+        if (response.total_num != 0) {
+          // let tmpJson = []
+          // response.data.patient_info.forEach(ele=> {
+          //   ele.hs = ele.hs == 0? '2': ele.hs + ""
+          //   ele.ky = ele.ky == 0? '2': ele.ky + ""
+          //   ele.yang_2_ying = ele.yang_2_ying != 1? ele.yang_2_ying + "": '2'
+          //   tmpJson.push(ele)
+          // })
+          console.log("info", response.data.patient_info)
+          patients.value = response.data.patient_info
+          countJson0.value = patients.value.length;
+          countJson1.value = 0;
+          countJson2.value = 0;
+          countJson3.value = 0;
+          countJson4.value = 0;
+          countJson5.value = 0;
+          countJson6.value = 0;
+          console.log(patients.value);
+          patients.value.forEach(ele => {
+            if (ele.ky_status == 1) {
+              countJson2.value += 1;
+              if (ele.hs_status == 1) {
+                countJson1.value += 1;
+                countJson4.value += 1;
+              } else {
+                countJson5.value += 1;
+              }
+            } else {
+              countJson3.value += 1;
+              if (ele.hs_status == 1) {
+                countJson4.value += 1;
+              } else {
+                countJson5.value += 1;
+              }
+            }
+
+            if (ele.yang_2_ying == 1) {
+              countJson6.value += 1;
+            }
+
+          });
+
+
+        } else {
+          showNotify({ type: 'warning', message: '未查询到数据',background: '#32CD32',  position: 'top',})
+        }
+          
+      }
+      });
+      
+      
+
+    });
+
     return {
       list,
       onLoad,
       loading,
       finished,
-      userInfo,
       show,
       hsAndky,
       onFinish,
@@ -217,6 +295,8 @@ export default {
       submit,
       patients,
       selectType,
+      countJson0,
+      countJson1,countJson2,countJson3,countJson4,countJson5,countJson6,
     };
   },
 };

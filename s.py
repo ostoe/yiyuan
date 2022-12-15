@@ -33,8 +33,9 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
+                "id_card": '6646'
             },
             {
                 "pi": "91057266",
@@ -48,8 +49,9 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
+                "id_card": '6642'
             },
             {
                 "pi": "91057266",
@@ -63,8 +65,9 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
+                "id_card": '6442'
             },
             {
                 "pi": "91057266",
@@ -78,8 +81,9 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
+                "id_card": '663422'
             },
             {
                 "pi": "91057266",
@@ -93,8 +97,8 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
                 "yang_2_ying": 1,
             },
             {
@@ -109,12 +113,13 @@ def calc(path):
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
+                "id_card": '432'
             }
         ]
     try:
-        resp = make_response(data)
+        resp = make_response({ 'result': { 'rows': data }, 'success': 'true' }, )
         resp.headers['Content-Type'] = 'application/json'
         return resp
     except Exception as e:
@@ -137,8 +142,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             },
             {
                 "pi": "91057266",
@@ -152,8 +157,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             },
             {
                 "pi": "91057266",
@@ -167,8 +172,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             },
             {
                 "pi": "91057266",
@@ -182,8 +187,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             },
             {
                 "pi": "91057266",
@@ -197,8 +202,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             },
             {
                 "pi": "91057266",
@@ -212,8 +217,8 @@ def calc1():
                 "wardName": "一病区",
                 "doctorCode": "31",
                 "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
+                "ky": 0,
+                "hs": 0,
             }
         ]
     try:
