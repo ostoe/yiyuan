@@ -8,6 +8,9 @@ const routes = [
     redirect: {
       name: 'home',
     },
+    meta: {
+      title: '核酸标记查询'
+    },
   },
   // {
   //   name: 'notFound',
@@ -34,14 +37,16 @@ const routes = [
     component: () =>
       import('./view/admin.vue'),
     meta: {
-      title: '登录',
+      title: '核酸查询导出'
     },
   },
 
   {
     path: '/home',
     name: 'home',
-    // params: { userCode: 'gets removed' },
+    meta: {
+      title: '核酸标记查询'
+    },
     component: () =>
       import('./view/home.vue')
   }
