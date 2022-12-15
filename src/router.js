@@ -2,13 +2,20 @@ import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router
 
 
 const routes = [
-  {
-    name: 'notFound',
-    path: '/:path(.*)+',
+    {
+    name: 'redirect',
+    path: '/:',
     redirect: {
-      name: 'login',
+      name: 'home',
     },
   },
+  // {
+  //   name: 'notFound',
+  //   path: '/:path(.*)+',
+  //   redirect: {
+  //     name: 'home',
+  //   },
+  // },
   {
 
     path: '/login',

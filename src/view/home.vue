@@ -8,7 +8,7 @@
             <van-popup v-model:show="show" round position="bottom">
             <van-cascader style="margin-bottom:22%;"
                 v-model="cascaderValue"
-                title="请选择所在地区"
+                title="请选择所在keshi"
                 :options="deptOptions"
                 @close="show = false"
                 @finish="onFinish"
@@ -113,7 +113,8 @@
 </template>
 
 <script>
-
+// import router from '../router'
+import { useRoute } from "vue-router";
 import { ref , onMounted} from 'vue';
 import axios from 'axios'
 import {showNotify }from 'vant'
@@ -122,6 +123,7 @@ export default {
     
     // const userCode = this.$route.params.userCode
       const userCode = 111;
+      const route = useRoute();
     console.log(userCode)
     // axios.defaults.baseURL = window.g.baseURL
     const show = ref(false);
@@ -228,6 +230,7 @@ export default {
     const deptOptions = ref([]);
     // 全部选项选择完毕后，会触发 finish 事件
     const onFinish = ({ selectedOptions }) => {
+      return // never run0
       show.value = false
       console.log("cascaderValue", cascaderValue.value)
       // let cascaderMap = {}
@@ -248,7 +251,8 @@ export default {
       if(response.status == 200) {
         // if (response.success) {
           let tmpJson = []
-          response.data.result.rows.forEach(ele=> {
+          if (response.data.result) {
+            response.data.result.rows.forEach(ele=> {
             ele.hs = ele.hs == 0? '2': ele.hs + ""
             ele.ky = ele.ky == 0? '2': ele.ky + ""
             if (ele.yang_2_ying) {
@@ -257,8 +261,10 @@ export default {
               ele.yang_2_ying = '2'
             }
             tmpJson.push(ele)
-          })
-          patients.value = tmpJson
+            })
+            patients.value = tmpJson
+          }
+
         // } else {
         //   showNotify({ type: 'warning', message: '未查询到数据',background: '#32CD32',  position: 'top',})
         // }
@@ -274,17 +280,19 @@ export default {
     const onSearchPatians = () => {
       if (searchPatians.value.trim() == '') {
         // console.log("重新搜索")
-        axios.post('/api/doctor/getCurOfficePatient', 
-      { deptCode: cascaderValue.value , queryType: "zy", PatientName: ""} 
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+      // { deptCode: cascaderValue.value.value , queryType: "zy", PatientName: ""} 
+      { deptName: cascaderValue.value.text , queryType: "zy", PatientName: ""} 
       ).then(handleResponse) // 重新检索
       } else {
-        axios.post('/api/doctor/getCurOfficePatient', 
-        { deptCode: cascaderValue.value , queryType: "zy", PatientName: searchPatians.value.trim()} 
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+        { deptName: cascaderValue.value.text , queryType: "zy", PatientName: searchPatians.value.trim()} 
         ).then(handleResponse);
       }
       
     }
     const getAllData = () => {// docs 
+      
       let hospitalRawURL = window.g.hospitalRawURL;
       // `(${count})`
       axios.get(hospitalRawURL)
@@ -300,8 +308,38 @@ export default {
             deptOptions.value.push({ text: ele[1], value: ele[0] })
           })
           // patients.value = response.data;
-          console.log(deptOptions.value.length)
+          console.log("l1", deptOptions.value.length)
           allDeptOptions = deptOptions.value;
+
+
+
+          console.log("mount", route.query)// 拿到之后用这个查http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code=b1018
+          axios.get("http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code=" + route.query.code).then(function(response){
+            if (response.status == 200) {
+              console.log("length", allDeptOptions.length)
+              if(response.data.result) {
+                let targetSelect = response.data.result['部门'];
+                // console.log("-targetSelect", targetSelect, allDeptOptions[0] )
+                // cascaderValue.value = {text: '妇产科', value: '14'}
+                // for(let i=0; i<allDeptOptions.length; i++) {
+                //   if (allDeptOptions[i].text == targetSelect) { // todo test
+                //     cascaderValue.value = allDeptOptions[i]
+                //     console.log("-", cascaderValue.value)
+                    
+                //     break;
+                //   }
+                // }
+                cascaderValue.value = {text: targetSelect, value:'84564654'}
+                axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+                    { deptName: targetSelect , queryType: "zy", PatientName: ""} 
+                    ).then(handleResponse)
+
+              }
+              
+            }
+          });
+
+
         } else {
           return
         }
@@ -338,7 +376,7 @@ export default {
               postPatientsJson.push(tmppatients1);
             }
         }
-        axios.post('/api/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
         .then(response => {
           if (response.status == 200) {
             showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})
@@ -374,10 +412,12 @@ export default {
         }
       }, 1000);
     };
-
+    
     onMounted(() => {
-      console.log("mount", userCode)
       getAllData();
+
+// console.log(route.query);
+      
     });
 
     return {
