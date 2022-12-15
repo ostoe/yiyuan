@@ -13,5 +13,7 @@ const jsconfig = {
 }
 
 
+export default jsconfig;
+
 
 

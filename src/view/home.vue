@@ -8,7 +8,7 @@
             <van-popup v-model:show="show" round position="bottom">
             <van-cascader style="margin-bottom:22%;"
                 v-model="cascaderValue"
-                title="请选择所在keshi"
+                title="请选择所在科室"
                 :options="deptOptions"
                 @close="show = false"
                 @finish="onFinish"
@@ -31,6 +31,7 @@
         v-model="searchPatians"
         show-action
         label=""
+        clearable
         placeholder="搜索病人"
       >
         <template #action>
@@ -132,120 +133,27 @@ export default {
     const cascaderValue = ref('');
     // 选项列表，children 代表子选项，支持多级嵌套
     const searchDepat = ref('');
-    const patients1 =  ref([
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "1钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-                "yang_2_ying": 0,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "2钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "2钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "2钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "2钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            },
-            {
-                "pi": "91057266",
-                "pv": "13925630",
-                "patientName": "3钱新华",
-                "deptCode": "1",
-                "areaName": "总院",
-                "ruyuandate": "2021-01-01",
-                "deptName": "呼吸内科",
-                "wardCode": "1",
-                "wardName": "一病区",
-                "doctorCode": "31",
-                "doctorName": "李楠",
-                "ky": 999,
-                "hs": 999,
-            }
-        ]);
     const patients = ref([]);
     var allDeptOptions = [];
     const deptOptions = ref([]);
     // 全部选项选择完毕后，会触发 finish 事件
     const onFinish = ({ selectedOptions }) => {
       return // never run0
-      show.value = false
-      console.log("cascaderValue", cascaderValue.value)
-      // let cascaderMap = {}
-      // for(let i=0; i<allDeptOptions.length, i++) {
-      //   if (allDeptOptions[i].value == cascaderValue.value){
-      //     cascaderMap = allDeptOptions[i];
-      //     break;
-      //   }
-      // }
-      console.log(selectedOptions[0])// {text: '外科', value: '2'}
-      // fieldValue.value = selectedOptions.map((option) => option.text).join('/');
-      // console.log(fieldValue.value)
-      axios.post('/api/doctor/getCurOfficePatient', 
-      { deptCode: cascaderValue.value , queryType: "zy", PatientName: ""} 
-      ).then(handleResponse)
+      // show.value = false
+      // console.log("cascaderValue", cascaderValue.value)
+      // // let cascaderMap = {}
+      // // for(let i=0; i<allDeptOptions.length, i++) {
+      // //   if (allDeptOptions[i].value == cascaderValue.value){
+      // //     cascaderMap = allDeptOptions[i];
+      // //     break;
+      // //   }
+      // // }
+      // console.log(selectedOptions[0])// {text: '外科', value: '2'}
+      // // fieldValue.value = selectedOptions.map((option) => option.text).join('/');
+      // // console.log(fieldValue.value)
+      // axios.post('/api/doctor/getCurOfficePatient', 
+      // { deptCode: cascaderValue.value , queryType: "zy", PatientName: ""} 
+      // ).then(handleResponse)
     };
     const handleResponse = (response) => {
       if(response.status == 200) {
@@ -280,12 +188,12 @@ export default {
     const onSearchPatians = () => {
       if (searchPatians.value.trim() == '') {
         // console.log("重新搜索")
-        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+        axios.post('/api/doctor/getCurOfficePatient', 
       // { deptCode: cascaderValue.value.value , queryType: "zy", PatientName: ""} 
       { deptName: cascaderValue.value.text , queryType: "zy", PatientName: ""} 
       ).then(handleResponse) // 重新检索
       } else {
-        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+        axios.post('/api/doctor/getCurOfficePatient', 
         { deptName: cascaderValue.value.text , queryType: "zy", PatientName: searchPatians.value.trim()} 
         ).then(handleResponse);
       }
@@ -330,7 +238,7 @@ export default {
                 //   }
                 // }
                 cascaderValue.value = {text: targetSelect, value:'84564654'}
-                axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+                axios.post('/api/doctor/getCurOfficePatient', 
                     { deptName: targetSelect , queryType: "zy", PatientName: ""} 
                     ).then(handleResponse)
 
@@ -376,7 +284,7 @@ export default {
               postPatientsJson.push(tmppatients1);
             }
         }
-        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
+        axios.post('/api/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
         .then(response => {
           if (response.status == 200) {
             showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})

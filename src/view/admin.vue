@@ -156,7 +156,7 @@ export default {
         case "7":
           {targetJson.yang_2_ying = 1;break; }
        }
-       axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", targetJson).then(handleResponse);
+       axios.post("/api/admin/printCurOfficePatient", targetJson).then(handleResponse);
 
     }
 
@@ -226,7 +226,7 @@ export default {
     };
 
     onMounted(() => {
-      axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", {all : 1 }).then(function (response) {
+      axios.post("/api/admin/printCurOfficePatient", {all : 1 }).then(function (response) {
         if(response.status == 200) {
         if (response.total_num != 0) {
           // let tmpJson = []

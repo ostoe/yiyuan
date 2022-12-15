@@ -4,9 +4,10 @@ import  router  from './router';
 import { Col, Row } from 'vant';
 // Vue.prototype.$http= axios
 import axios from 'axios'
+import jsconfig  from '../public/config.js';
 // App.prototype.$http= axios
-let jsconfig = require('../public/config.js')
-axios.defaults.baseURL=jsconfig.axiosBaseUrl; // 好像无效
+// let jsconfig = require('../public/config.js')
+// axios.defaults.baseURL=jsconfig.axiosBaseUrl; // 
 window.g = {
     host: "host",
     ifToC: false, // false toB模式; ture toC模式 

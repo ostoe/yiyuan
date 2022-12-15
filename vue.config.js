@@ -1,7 +1,7 @@
 const { VantResolver } = require("unplugin-vue-components/resolvers");
 const ComponentsPlugin = require("unplugin-vue-components/webpack");
 // let jsconfig=require("./public/config.js");
-/* eslint-disable @typescript-eslint/no-var-requires */
+// /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const UglifyPlugin = require('uglifyjs-webpack-plugin')
 // const CompressionWebpackPlugin = require('compression-webpack-plugin')
@@ -38,9 +38,16 @@ module.exports = {
   },
   //调整 webpack 配置 https://cli.vuejs.org/zh/guide/webpack.html#%E7%AE%80%E5%8D%95%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F
   configureWebpack: (config) => {
+    config.plugins.push(   
+            ComponentsPlugin({
+        resolvers: [VantResolver()],
+      }),
+      );
+
     if (process.env.NODE_ENV === 'production') {
       // 为生产环境修改配置...
       config.mode = 'production'
+
       // 利用splitChunks将每个依赖包单独打包，在生产环境下配置
       // 开启gzip压缩
       // config.plugins.push(new CompressionWebpackPlugin({
@@ -50,72 +57,72 @@ module.exports = {
       //   minRatio: 0.8
       // }));
       // 开启分离js
-      config.optimization = {
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          maxInitialRequests: Infinity,
-          minSize: 20000, // 依赖包超过20000bit将被单独打包
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name (module) {
-                // get the name. E.g. node_modules/packageName/not/this/part.js
-                // or node_modules/packageName
-                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-                // npm package names are URL-safe, but some servers don't like @ symbols
-                return `${packageName.replace('@', '')}`
-              }
-            }
-          }
-        },
-        minimizer: [new UglifyPlugin({
-          uglifyOptions: {
-            compress: {
-              warnings: false,
-              drop_console: true, // console
-              drop_debugger: false,
-              pure_funcs: ['console.log'] // 移除console
-            }
-          }
-        })]
-      };
+      // config.optimization = {
+      //   runtimeChunk: 'single',
+      //   splitChunks: {
+      //     chunks: 'all',
+      //     maxInitialRequests: Infinity,
+      //     minSize: 20000, // 依赖包超过20000bit将被单独打包
+      //     cacheGroups: {
+      //       vendor: {
+      //         test: /[\\/]node_modules[\\/]/,
+      //         name (module) {
+      //           // get the name. E.g. node_modules/packageName/not/this/part.js
+      //           // or node_modules/packageName
+      //           const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+      //           // npm package names are URL-safe, but some servers don't like @ symbols
+      //           return `${packageName.replace('@', '')}`
+      //         }
+      //       }
+      //     }
+      //   },
+      //   minimizer: [new UglifyPlugin({
+      //     uglifyOptions: {
+      //       compress: {
+      //         warnings: false,
+      //         drop_console: true, // console
+      //         drop_debugger: false,
+      //         pure_funcs: ['console.log'] // 移除console
+      //       }
+      //     }
+      //   })]
+      // };
       // 取消webpack警告的性能提示
-      config.performance = {
-        hints: 'warning',
-        //入口起点的最大体积
-        maxEntrypointSize: 50000000,
-        //生成文件的最大体积
-        maxAssetSize: 30000000,
-        //只给出 ts 文件的性能提示
-        assetFilter: function (assetFilename) {
-          return assetFilename.endsWith('.ts');
-        }
-      }
+      // config.performance = {
+      //   hints: 'warning',
+      //   //入口起点的最大体积
+      //   maxEntrypointSize: 50000000,
+      //   //生成文件的最大体积
+      //   maxAssetSize: 30000000,
+      //   //只给出 ts 文件的性能提示
+      //   assetFilter: function (assetFilename) {
+      //     return assetFilename.endsWith('.ts');
+      //   }
+      // }
     } else {
       // 为开发环境修改配置...
       config.mode = 'development'
 
-      config.optimization = {
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          maxInitialRequests: Infinity,
-          minSize: 20000, // 依赖包超过20000bit将被单独打包
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name (module) {
-                // get the name. E.g. node_modules/packageName/not/this/part.js
-                // or node_modules/packageName
-                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-                // npm package names are URL-safe, but some servers don't like @ symbols
-                return `${packageName.replace('@', '')}`
-              }
-            }
-          }
-        }
-      };
+      // config.optimization = {
+      //   runtimeChunk: 'single',
+      //   splitChunks: {
+      //     chunks: 'all',
+      //     maxInitialRequests: Infinity,
+      //     minSize: 20000, // 依赖包超过20000bit将被单独打包
+      //     cacheGroups: {
+      //       vendor: {
+      //         test: /[\\/]node_modules[\\/]/,
+      //         name (module) {
+      //           // get the name. E.g. node_modules/packageName/not/this/part.js
+      //           // or node_modules/packageName
+      //           const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+      //           // npm package names are URL-safe, but some servers don't like @ symbols
+      //           return `${packageName.replace('@', '')}`
+      //         }
+      //       }
+      //     }
+      //   }
+      // };
     }
   },
   // css: {
@@ -138,7 +145,7 @@ module.exports = {
   devServer: { 
     // host: '172.20.10.3', // TODO 改为部署虚拟机的地址
     host: 'localhost',
-    port: 3434,
+    port: 8080,
     open: false,
     overlay: { 
       warnings: false,
@@ -161,11 +168,7 @@ module.exports = {
       }
     }
   },
-  configureWebpack: {
-    plugins: [
-      ComponentsPlugin({
-        resolvers: [VantResolver()],
-      }),
-    ],
-  },
+  // configureWebpack: {
+
+  // },
 };

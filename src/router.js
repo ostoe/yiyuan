@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 
 const routes = [
@@ -49,7 +49,21 @@ const routes = [
     },
     component: () =>
       import('./view/home.vue')
-  }
+  },
+
+  {
+    path: '/home1',
+    name: 'home1',
+    meta: {
+      title: '核酸标记查询'
+    },
+    component: () =>
+      import('./view/home1.vue')
+  },
+
+
+
+
 ]
 
 const router = createRouter({
