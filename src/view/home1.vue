@@ -18,7 +18,7 @@
                         <div>搜索</div>
                     </template>
                     </van-search></van-col>
-                <van-col span="4"><van-button round type="primary" @click="submit">提交</van-button></van-col>
+                <van-col span="4"><van-button plain hairline color="#7232dd" type="primary" @click="submit">提交</van-button></van-col>
                 
             </van-row>
         </van-sticky>
@@ -34,9 +34,9 @@
 <!-- 列表单元开始 -->
     <div style="margin-left:2%; margin-right:2%">
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-row justify="space-between" style="box-shadow: 1px 2px 2px 2px rgba(0,0,0,0.1); margin-top:3%; margin-right:1%; padding:14px; border-radius: 10px;"  v-for="item in patients" :key="item" :title="item">
+            <van-row justify="space-between" style="background-color: #AFEEEE; box-shadow: 1px 2px 2px 2px rgba(0,0,0,0.1); margin-top:3%; margin-right:1%; padding:14px; border-radius: 10px;"  v-for="item in patients" :key="item" :title="item">
                 <!-- <van-cell class="van-cell-text"> -->
-                    <van-col span="14" style="margin-top: 0%; margin-right: 0%; background-color: #AFEEEE">
+                    <van-col span="14" style="margin-top: 0%; margin-right: 0%; ">
                         <van-row justify="space-between" span="7">
                             <van-col span="6"> <van-tag plain type="primary" size="large">{{item.areaName}}</van-tag> </van-col>
                             <van-col span="6"> {{item.pi}} </van-col>
