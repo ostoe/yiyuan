@@ -8,6 +8,9 @@ const routes = [
     redirect: {
       name: 'login',
     },
+    meta: {
+      title: '核酸标记查询'
+    },
   },
   {
 
@@ -27,13 +30,16 @@ const routes = [
     component: () =>
       import('./view/admin.vue'),
     meta: {
-      title: '登录',
+      title: '核酸查询导出'
     },
   },
 
   {
     path: '/home',
     name: 'home',
+    meta: {
+      title: '核酸标记查询'
+    },
     component: () =>
       import('./view/home.vue')
   }
