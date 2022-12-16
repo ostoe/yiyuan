@@ -188,12 +188,12 @@ export default {
     const onSearchPatians = () => {
       if (searchPatians.value.trim() == '') {
         // console.log("重新搜索")
-        axios.post('/api/doctor/getCurOfficePatient', 
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
       // { deptCode: cascaderValue.value.value , queryType: "zy", PatientName: ""} 
       { deptName: cascaderValue.value.text , queryType: "zy", PatientName: ""} 
       ).then(handleResponse) // 重新检索
       } else {
-        axios.post('/api/doctor/getCurOfficePatient', 
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
         { deptName: cascaderValue.value.text , queryType: "zy", PatientName: searchPatians.value.trim()} 
         ).then(handleResponse);
       }
@@ -238,7 +238,7 @@ export default {
                 //   }
                 // }
                 cascaderValue.value = {text: targetSelect, value:'84564654'}
-                axios.post('/api/doctor/getCurOfficePatient', 
+                axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
                     { deptName: targetSelect , queryType: "zy", PatientName: ""} 
                     ).then(handleResponse)
 
@@ -284,7 +284,7 @@ export default {
               postPatientsJson.push(tmppatients1);
             }
         }
-        axios.post('/api/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
+        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/updatePatientNucleicStatus', {patientInfos: postPatientsJson})
         .then(response => {
           if (response.status == 200) {
             showNotify({ type: 'success', message: '提交成功',background: '#32CD32',  position: 'top',})

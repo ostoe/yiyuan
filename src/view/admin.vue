@@ -199,7 +199,7 @@ export default {
         case "7":
           { targetJson.yang_2_ying = 1; break; }
       }
-      axios.post("/api/admin/printCurOfficePatient", targetJson).then(handleResponse);
+      axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", targetJson).then(handleResponse);
 
     }
 
@@ -268,12 +268,12 @@ export default {
     };
 
     onMounted(() => {
-      axios.post("/api/doctor/getCurOfficePatient", { all: true }).then(function (response) {
+      axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", { ky_status: 1, hs_status: 1, yang_2_ying: 1,all: 1}).then(function (response) {
 
         // axios.post("/api/admin/printCurOfficePatient", { all: 1 }).then(function (response) {
-        if (response.status == 200 && response.data.result.total != 0) {
-          patients.value = response.data.result.rows
-          patientComposition.value[0] = response.data.result.rows
+        if (response.status == 200 && response.data.total_num != 0) {
+          patients.value = response.data.patient_info
+          patientComposition.value[0] = response.data.patient_info
           for (let i = 0; i < patients.value.length; i++) {
             let ele = patients.value[i]
             // 0 全部 1 + 阳 2. 抗原阳 3. 抗原阴 4. 核酸阳 5. 核酸阴 6.阳转阴
