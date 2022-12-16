@@ -138,10 +138,11 @@ export default {
 
 
     const initData = () => {
-      axios.get("http://201.xggong.com:12201/xs_datacenter/patient/byDoctor?doctorCode=7335")//TODO替换route+query
-        // axios.post("/api/doctors/getCurOfficePatient", {
-        // "doctorCode": "7335",  // TODO先写死 route.query
-        // }).then(function(response){ 
+      // axios.get("http://201.xggong.com:12201/xs_datacenter/patient/byDoctor?doctorCode=" + route.query)// ref code=7355
+        axios.post("/api/doctors/getCurOfficePatient", {
+          "doctorCode": route.query.code,  // 先写死 route.query
+        })
+        // ).then(function(response){
         .then(function (res) {
           if (res.status != 200) { showNotify({ type: 'warning', message: '"病人数据查询失败', background: '#32CD32', position: 'top', }); return }
           if (res.data.result && res.data.total != 0) { //TODO下拉刷新数据
@@ -149,8 +150,19 @@ export default {
             loading.value = true;
             // 数据全部加载完成
             finished.value = true;
+
+            res.data.result.rows.forEach(ele=>{
+              if (ele.marked_by ) {
+                ele.ky_status = Number(ele.ky_status) == 1 ? "1": "2";
+                ele.hs_status = Number(ele.hs_status) == 1 ? "1": "2";
+                // ele.yang_2_ying = ele.yang_2_ying ? 1 : 0
+              }
+              // rawPatients.push(ele);
+            })
             rawPatients = res.data.result.rows
-            console.log("rawPatients", rawPatients)
+            // console.log("rawPatients", rawPatients)
+            // int 2 str
+
             patients.value = rawPatients
             showNotify({ type: 'warning', message: '获取医生数据成功', background: '#F23D32', position: 'top', })
           }
@@ -204,12 +216,12 @@ export default {
 
       for (let i = 0; i < patients.value.length; i++) {
         // console.log('a', patients.value[i].hs_status, typeof patients.value[i].hs_status)
-        if (patients.value[i].hs_status != "1" && patients.value[i].hs_status != "2") { //校验？
-          // console.log("skip")
+        if (patients.value[i].marked_by == "" || (patients.value[i].hs_status != "1" && patients.value[i].hs_status != "2")) { //校验？
+          console.log("skip")
           // showNotify({ type: 'danger', message: '信息未完全填写' ,background: '#ffe1e1',  position: 'top'})
           continue;
         } else {
-          let tmppatients = patients.value[i];
+          let tmppatients = {...patients.value[i]};
           tmppatients.ky_status = Number(tmppatients.ky_status);
           tmppatients.hs_status = Number(tmppatients.hs_status);
           tmppatients.yang_2_ying = tmppatients.yang_2_ying ? 1 : 0
@@ -231,7 +243,7 @@ export default {
       console.log("submit")
     }
 
-    const docterInfo = ref({ code: "N6283", deptCode: "448", deptName: "重症医学科", name: "伍宁" }); //TODO 去掉预留
+    const docterInfo = ref({})//{ code: "N6283", deptCode: "448", deptName: "重症医学科", name: "伍宁" }); //TODO 去掉预留
     const buttomOnChange = (index) => {
       showToast(`标签 ${index}`);
       showToast(`a-${active.value}`);
@@ -239,7 +251,10 @@ export default {
 
     onMounted(() => {
       // `(${count})`
-      axios.get("http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code=7335").then(function (response) {  //先用官网的数据
+      if (!route.query.code) {
+        showNotify({ type: 'warning', message: '获取医生数据失败', background: '#F23D32', position: 'top', })
+      }
+      axios.get("http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code="+route.query.code).then(function (response) {  //先用官网的数据
         if (response.status != 200) { showNotify({ type: 'warning', message: '"医生数据查询失败', background: '#32CD32', position: 'top', }); return }
         //[result  = {code: "N6283", deptCode: "448", deptName:"重症医学科", name: "伍宁"}]
         if (response.data.result) {

@@ -48,7 +48,7 @@ const routes = [
       title: '核酸标记查询'
     },
     component: () =>
-      import('./view/home.vue')
+      import('./view/home1.vue')
   },
 
   {
@@ -58,7 +58,7 @@ const routes = [
       title: '核酸标记查询'
     },
     component: () =>
-      import('./view/home1.vue')
+      import('./view/home.vue')
   },
 
 

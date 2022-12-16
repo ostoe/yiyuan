@@ -99,11 +99,11 @@
           <van-col span="7">
               <van-row style="margin-top: 10%;">
                 <van-button size="mini">抗原</van-button>
-                <van-col v-if="item.hs_status == '2'">
+                <van-col v-if="item.ky_status == '2'">
                   <van-icon name="passed" color="#32CD32" />
                   阴
                 </van-col>
-                <van-col v-else-if="item.hs_status == '1'">
+                <van-col v-else-if="item.ky_status == '1'">
                   <van-icon name="clock-o" color="#ee0a24" />
                   阳
                 </van-col>
@@ -114,11 +114,11 @@
               </van-row>
               <van-row style="margin-top: 10%;">
                 <van-button size="mini">核酸</van-button>
-                <van-col v-if="item.ky_status == '2'">
+                <van-col v-if="item.hs_status == '2'">
                   <van-icon name="passed" color="#32CD32" />
                   阴
                 </van-col>
-                <van-col v-else-if="item.ky_status == '1'">
+                <van-col v-else-if="item.hs_status == '1'">
                   <van-icon name="clock-o" color="#ee0a24" />
                   阳
                 </van-col>
@@ -276,6 +276,7 @@ export default {
           patientComposition.value[0] = response.data.result.rows
           for (let i = 0; i < patients.value.length; i++) {
             let ele = patients.value[i]
+            // 0 全部 1 + 阳 2. 抗原阳 3. 抗原阴 4. 核酸阳 5. 核酸阴 6.阳转阴
             if (ele.ky_status == 1) {
               patientComposition.value[2].push(ele)
               if (ele.hs_status == 1) {
