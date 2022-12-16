@@ -8,6 +8,83 @@ http://201.xggong.com:12201/xs_datacenter/patient/byDoctor?doctorCode=7335
 按照医生code查询，同一个治疗组的能查到同一个患者的
 此外参数还有pageNum,pageSize，pv、name和之前的一样
 
+
+
+{
+    "areaName": "江苏路分部",
+    "hospitalCode": "02",
+    "deptCode": "4845",
+    "deptName": "运动医学",
+    "doctorCode": "7335",  // 有了，不用新增了
+    "doctorName": "张鹏",
+    "patientName": "刘华伟",
+    "pi": "97041742",
+    "pv": "22304164",
+    "ruyuandate": "2022-12-13 09:14:34",
+    "wardCode": "810",
+    "wardName": "86病区",
+    "age": 43,
+    "gender": "男性",
+    "bedNo": "G0501",
+    "clinicDiagName": "左侧膝关节前十字韧带完全断裂",
+    "idcard": "362329197901264818",
+    "phone": ""
+    ------以下为新增字段：
+    hs_status: 0 没有标记过，1是阳，2是阴
+    ky_status: 同上
+    yang_2_ying: 0 是没有转过（默认）1表示转阴了，
+    marked_by: "" ｜ "医生的名字" // "" 表示从未标记过， "医生的名字"
+    
+}
+
+
+接口：
+POST  /api/doctor/getCurOfficePatient 根据医生的code查询所有/查询特定
+{
+    "all": true //admin界面用的 有这个字段就是就是查询所有，致于是筛选 阳 、阴、阴 加阳，都由前段做了，
+    "doctorCode": "7335",   // 医生界面必传
+    "pi": "888" // str  医生界面optional ： 病人的住院号，传入就是查询病人
+}
+
+POST  /api/doctor/updatePatientNucleicStatus 提交更新病人信息：
+{
+    "total": 1
+    "rows":[ // 多条的格式 里面的字段是全的；
+        {
+            "areaName": "江苏路分部",
+            "hospitalCode": "02",
+            "deptCode": "4845",
+            "deptName": "运动医学",
+            "doctorCode": "7335",  // 有了，不用新增了
+            "doctorName": "张鹏",
+            "patientName": "刘华伟",
+            "pi": "97041742",
+            "pv": "22304164",
+            "ruyuandate": "2022-12-13 09:14:34",
+            "wardCode": "810",
+            "wardName": "86病区",
+            "age": 43,
+            "gender": "男性",
+            "bedNo": "G0501",
+            "clinicDiagName": "左侧膝关节前十字韧带完全断裂",
+            "idcard": "362329197901264818",
+            "phone": ""
+            ------以下为新增字段：
+            hs_status: 0 没有标记过，1是阳，2是阴
+            ky_status: 同上
+            yang_2_ying: 0 是没有转过（默认）1表示转阴了，
+            marked_by:  "医生的名字" // "" 表示从未标记过， "医生的名字"
+            
+        },
+        ……
+    ]
+}
+
+
+
+
+
+
 {
     "success": true,
     "result": {

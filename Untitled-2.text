@@ -1,0 +1,17 @@
+
+
+公网拉代码：
+git clone https://github.com/ostoe/yiyuan.git
+cd yiyuan
+改两个文件：
+1. ./src/main.js  文件
+// baseURL: 'http://localhost:8081', //这一行后面的地址，改成现在后端服务的地址
+hospitalRawURL: 'http://201.xggong.com:12201/xs_datacenter/hospital/doctors', // 改成生产的，线上连跳不需要
+
+2. vue.config.js
+host: '172.20.10.3', // TODO 改为部署虚拟机的地址
+target: 'http://localhost:8081', // 这里的端口是后端端口 改为后端uri 部署在同一个虚拟机只改端口号就行
+
+
+ref([{ value: 0, text: "全部", type: 'primary', count: 0 }, { value: 0, text: "全部1", type: 'primary', count: 0 }, { value: 0, text: "全部", type: 'primary', count: 0 }, { value: 0, text: "全部1", type: 'primary', count: 0 }, { value: 0, text: "全部", type: 'primary', count: 0 }, { value: 0, text: "全部1", type: 'primary', count: 0 }, { value: 0, text: "全部", type: 'primary', count: 0 }, { value: 0, text: "全部1", type: 'primary', count: 0 }])
+    
