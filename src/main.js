@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import  router  from './router';
-import { Col, Row } from 'vant';
+import { Col, Row , Notify } from 'vant';
 // Vue.prototype.$http= axios
 import axios from 'axios'
 import jsconfig  from '../public/config.js';
@@ -19,5 +19,6 @@ const app = createApp(App);
 app.use(Col);
 app.use(Row);
 app.use(router);
+app.use(Notify);
 app.config.globalProperties.$axios=axios;
 app.mount('#app');

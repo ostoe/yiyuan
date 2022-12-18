@@ -40,7 +40,13 @@ const routes = [
       title: '核酸查询导出'
     },
   },
-
+  {
+    path: '/test',
+    name: 'test',
+    component: () => 
+      import ('./view/test.vue')
+    
+  },
   {
     path: '/home',
     name: 'home',

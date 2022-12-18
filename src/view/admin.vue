@@ -308,8 +308,6 @@ export default {
         }
       });
 
-
-
     });
 
     return {

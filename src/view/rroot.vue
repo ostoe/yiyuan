@@ -6,7 +6,7 @@
 <script>
 import router from '../router';
 import { useRoute } from "vue-router";
-import { ref, onMounted } from 'vue';
+import {  onMounted } from 'vue';
 export default {
     setup() {
         const route = useRoute();
