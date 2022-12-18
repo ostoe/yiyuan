@@ -11,11 +11,12 @@
   "dependencies": {
     "axios": "^1.2.1",
     "core-js": "^3.6.5",
+    "saved": "^0.1.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vant": "^4.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
-    "vue-toast-notification": "3.0",
+    "vue-toast-notification": "3.00",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
