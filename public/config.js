@@ -9,7 +9,9 @@
 
 
 const jsconfig = {
-  axiosBaseUrl: "http://124.223.49.85:1112/NucleicPatientMark/"
+  doctorAPI: "http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code=",
+  axiosBaseUrl: "http://124.223.49.85:1112/NucleicPatientMark/",
+  axiosBaseUr: "/api/"
 }
 
 

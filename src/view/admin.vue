@@ -199,7 +199,7 @@ export default {
         case "7":
           { targetJson.yang_2_ying = 1; break; }
       }
-      axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", targetJson).then(handleResponse);
+      axios.post("/admin/printCurOfficePatient", targetJson).then(handleResponse);
 
     }
 
@@ -268,7 +268,7 @@ export default {
     };
 
     onMounted(() => {
-      axios.post("http://124.223.49.85:1112/NucleicPatientMark/admin/printCurOfficePatient", { ky_status: 1, hs_status: 1, yang_2_ying: 1,all: 1}).then(function (response) {
+      axios.post("/admin/printCurOfficePatient", { ky_status: 1, hs_status: 1, yang_2_ying: 1,all: 1}).then(function (response) {
 
         // axios.post("/api/admin/printCurOfficePatient", { all: 1 }).then(function (response) {
         if (response.status == 200 && response.data.total_num != 0) {

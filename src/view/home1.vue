@@ -193,6 +193,7 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 import axios from 'axios'
 // import { showNotify, showToast } from 'vant'
+import jsconfig from '../../public/config'
 
 import {useToast} from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
@@ -200,6 +201,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 export default {
 
   setup() {
+    
     const pageNum = ref(1)
     const pullDownloading = ref(false);
     const active = ref(0); // 0 or 1
@@ -209,6 +211,8 @@ export default {
     // const patients = ref([]);
     // var rawPatients = [{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"刘华伟","pi":"97041742","pv":"22304164","ruyuandate":"2022-12-13 09:14:34","wardCode":"810","wardName":"86病区","age":43,"gender":"男性","bedNo":"G0501","clinicDiagName":"左侧膝关节前十字韧带完全断裂","idcard":"362329197901264818","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"刘华伟","pi":"97041742","pv":"22304164","ruyuandate":"2022-12-13 09:14:34","wardCode":"810","wardName":"86病区","age":43,"gender":"男性","bedNo":"G0501","clinicDiagName":"左侧膝关节前十字韧带完全断裂","idcard":"362329197901264818","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"李正明","pi":"97041762","pv":"22308181","ruyuandate":"2022-12-14 17:19:48","wardCode":"810","wardName":"86病区","age":67,"gender":"男性","bedNo":"G0102","clinicDiagName":"右侧肩袖损伤","idcard":"310229195508211212","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"李正明","pi":"97041762","pv":"22308181","ruyuandate":"2022-12-14 17:19:48","wardCode":"810","wardName":"86病区","age":67,"gender":"男性","bedNo":"G0102","clinicDiagName":"右侧肩袖损伤","idcard":"310229195508211212","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"李正明","pi":"97041762","pv":"22308181","ruyuandate":"2022-12-14 17:19:48","wardCode":"810","wardName":"86病区","age":67,"gender":"男性","bedNo":"G0102","clinicDiagName":"右侧肩袖损伤","idcard":"310229195508211212","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"8266","doctorName":"万方","patientName":"刘明芮","pi":"97041763","pv":"22308203","ruyuandate":"2022-12-14 17:21:24","wardCode":"810","wardName":"86病区","age":18,"gender":"女性","bedNo":"G0602","clinicDiagName":"右侧膝关节前十字韧带损伤","idcard":"500112200404170424","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"8266","doctorName":"万方","patientName":"刘明芮","pi":"97041763","pv":"22308203","ruyuandate":"2022-12-14 17:21:24","wardCode":"810","wardName":"86病区","age":18,"gender":"女性","bedNo":"G0602","clinicDiagName":"右侧膝关节前十字韧带损伤","idcard":"500112200404170424","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"8266","doctorName":"万方","patientName":"刘明芮","pi":"97041763","pv":"22308203","ruyuandate":"2022-12-14 17:21:24","wardCode":"810","wardName":"86病区","age":18,"gender":"女性","bedNo":"G0602","clinicDiagName":"右侧膝关节前十字韧带损伤","idcard":"500112200404170424","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"何琳","pi":"97041777","pv":"22313773","ruyuandate":"2022-12-15 17:17:41","wardCode":"810","wardName":"86病区","age":49,"gender":"女性","bedNo":"G0502","clinicDiagName":"右侧肩袖损伤","idcard":"513027197309046221","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"何琳","pi":"97041777","pv":"22313773","ruyuandate":"2022-12-15 17:17:41","wardCode":"810","wardName":"86病区","age":49,"gender":"女性","bedNo":"G0502","clinicDiagName":"右侧肩袖损伤","idcard":"513027197309046221","phone":""},{"areaName":"江苏路分部","hospitalCode":"02","deptCode":"4845","deptName":"运动医学","doctorCode":"7335","doctorName":"张鹏","patientName":"何琳","pi":"97041777","pv":"22313773","ruyuandate":"2022-12-15 17:17:41","wardCode":"810","wardName":"86病区","age":49,"gender":"女性","bedNo":"G0502","clinicDiagName":"右侧肩袖损伤","idcard":"513027197309046221","phone":""}]
     var rawPatients = [] // 未提交的原始数据
+    var baseURLAPI = jsconfig.axiosBaseUrl; // 暂时无用！
+    var doctorURLAPI = jsconfig.doctorAPI;
     var iptTimer = null;
     const patients = ref([])
     const list = ref([]);
@@ -218,7 +222,7 @@ export default {
     var searchJsonTemplate = { queryType: iszhuyuan, doctorCode: '', patientName: "", pi: "", searchKey: "", pageNum: 1 }
 
     const $toast = useToast();
-
+    
     const showNotify = (data) => {
       if (data.type == "success") {
         $toast.success(data.message, {position: 'top', duration: 1500})
@@ -282,7 +286,7 @@ export default {
     }
 
     const commonPullPatientsData = (data, isPullRefresh = false) => {
-      axios.post("http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient", data)
+      axios.post("/doctor/getCurOfficePatient", data)
         .then(function (res) {
           if (res.status != 200) { showNotify({ type: 'warning', message: '"病人数据查询失败', background: '#32CD32', position: 'top', }); return }
           if (res.data.result && res.data.total != 0) {
@@ -420,7 +424,7 @@ export default {
       }
 
       console.log("postPatientsJson", postPatientsJson)
-      axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/updatePatientNucleicStatus', { total: postPatientsJson.length, patientInfos: postPatientsJson })
+      axios.post('/doctor/updatePatientNucleicStatus', { total: postPatientsJson.length, patientInfos: postPatientsJson })
         .then(response => {
           if (response.status == 200) {
             // showToast('提示内容');
@@ -448,7 +452,7 @@ export default {
         let d1 = {
           marked_by: docterInfo.value['姓名']
         }
-        axios.post("http://124.223.49.85:1112/NucleicPatientMark/doctor/getMarkedPatient", d1).then(res => {
+        axios.post("/doctor/getMarkedPatient", d1).then(res => {
           console
           if (res.status == 200) {
             patientsWithTag.value = res.data.patientInfos
@@ -458,6 +462,9 @@ export default {
     }
 
     onMounted(() => {
+
+
+
       // `(${count})`
       // showConfirmDialog({
       //   title: '请选择',
@@ -485,7 +492,7 @@ export default {
         showNotify({ type: 'warning', message: '获取医生数据失败', background: '#F23D32', position: 'top', });
       } else {
         searchJsonTemplate.doctorCode = route.query.code
-        axios.get("http://201.xggong.com:12201/xs_datacenter/doctors/byCode?code=" + route.query.code).then(function (response) {  //先用官网的数据
+        axios.get(doctorURLAPI + route.query.code).then(function (response) {  //先用官网的数据
           if (response.status != 200) { showNotify({ type: 'warning', message: '"医生数据查询失败', background: '#32CD32', position: 'top', lockScroll: true,}); return }
           //[result  = {code: "N6283", deptCode: "448", deptName:"重症医学科", name: "伍宁"}]
           if (response.data.result) {
@@ -803,7 +810,7 @@ export default {
 
 
 
-  axios.post("http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient", sj).then(function (res) {
+  axios.post("/doctor/getCurOfficePatient", sj).then(function (res) {
     if (res.status != 200) { showNotify({ type: 'warning', message: '"病人数据查询失败', background: '#32CD32', position: 'top', }); return }
     if (res.data.result && res.data.total != 0) { //TODO下拉刷新数据
       // 加载状态结束

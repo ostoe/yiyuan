@@ -188,12 +188,12 @@ export default {
     const onSearchPatians = () => {
       if (searchPatians.value.trim() == '') {
         // console.log("重新搜索")
-        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+        axios.post('/doctor/getCurOfficePatient', 
       // { deptCode: cascaderValue.value.value , queryType: "zy", PatientName: ""} 
       { deptName: cascaderValue.value.text , queryType: "zy", PatientName: ""} 
       ).then(handleResponse) // 重新检索
       } else {
-        axios.post('http://124.223.49.85:1112/NucleicPatientMark/doctor/getCurOfficePatient', 
+        axios.post('/doctor/getCurOfficePatient', 
         { deptName: cascaderValue.value.text , queryType: "zy", PatientName: searchPatians.value.trim()} 
         ).then(handleResponse);
       }

@@ -5,9 +5,17 @@ import { Col, Row , Notify } from 'vant';
 // Vue.prototype.$http= axios
 import axios from 'axios'
 import jsconfig  from '../public/config.js';
-// App.prototype.$http= axios
-// let jsconfig = require('../public/config.js')
-// axios.defaults.baseURL=jsconfig.axiosBaseUrl; // 
+// var jsconfig = require('./config.js')
+
+// console.log("proces env", process.env.VUE_APP_URL)
+
+// fetch('./config.json').then(res => res.json()).then(config => {
+//     console.log("config.json", config)
+//     axios.defaults.baseURL=config.axiosBaseUrl
+// })
+// console.log("run", jsconfig)
+
+axios.defaults.baseURL=jsconfig.axiosBaseUrl; // 
 window.g = {
     host: "host",
     ifToC: false, // false toB模式; ture toC模式 
@@ -20,5 +28,5 @@ app.use(Col);
 app.use(Row);
 app.use(router);
 app.use(Notify);
-app.config.globalProperties.$axios=axios;
+// app.config.globalProperties.$axios=axios;
 app.mount('#app');
